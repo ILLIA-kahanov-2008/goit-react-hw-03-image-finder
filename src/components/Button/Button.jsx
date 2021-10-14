@@ -6,3 +6,4 @@
 // window.scrollTo({ top: document.documentElement.scrollHeight, behavior:
 // 'smooth', }); Кнопка должна рендерится только тогда, когда есть какие-то
 // загруженные изобаржения. Если массив изображений пуст, кнопка не рендерится.
+

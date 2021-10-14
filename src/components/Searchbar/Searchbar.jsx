@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 import styles from './Searchbar.module.css'
 
@@ -65,13 +65,9 @@ class SearchBar extends Component {
   }
 }
 
-SearchBar.propTypes = {
+// SearchBar.propTypes = {
 
-};
+// };
 
 export default SearchBar;
-
-// Описание компонента Searchbar Компонент принимает один проп onSubmit -
-// функцию для передачи значения инпута при сабмите формы. Создает DOM-элемент
-// следующей структуры.
 
