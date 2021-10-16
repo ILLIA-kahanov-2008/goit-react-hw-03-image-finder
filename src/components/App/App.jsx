@@ -19,7 +19,6 @@ class App extends Component {
   }
 
   onImageClick = (altModalImageName, modalImageURL) => {
-    console.log("altImageName:", altModalImageName, "modalImageURL:", modalImageURL);
     this.setState({altModalImageName, modalImageURL})
     this.toggleModal();
   }

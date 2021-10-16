@@ -75,7 +75,6 @@ class ImageGallery extends Component {
   handleImageClick = e => {
     const { alt, dataset } = e.target;
     const largeImgURL = dataset.src;
-    console.log('e.target.data-src :>> ', dataset.src);
     this.props.onImageClick(alt, largeImgURL);
   };
 
@@ -111,7 +110,6 @@ class ImageGallery extends Component {
                   tags={tags}
                   modalImageURL={largeImageURL}
                   key={id}
-                  // id={id}
                   handleImageClick={this.handleImageClick}
                 />
               ),
@@ -126,8 +124,8 @@ class ImageGallery extends Component {
     }
     if (status === Status.REJECTED) {
       return (
-        <p>
-          <span>{newQuery}</span>
+        <p style={{color: "#0d2de0"}}>
+          <span style={{fontSize: 16, textDecorationLine: "line-through", color: "red", display: "block"}}>{newQuery}</span>
           hasn't find. Try another query again
         </p>)
     }
