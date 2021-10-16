@@ -1,9 +1,24 @@
-// Описание компонента Button При нажатии на кнопку Load more должна догружаться
-// следующая порция изображений и рендериться вместе с предыдущими. После загрузки
-// и рендера новой партии изображений страница должна плавно скролиться. Для скрола
-// используй следующий код.
+import React from 'react';
+import PropTypes from 'prop-types';
+import styles from './Button.module.css'
 
-// window.scrollTo({ top: document.documentElement.scrollHeight, behavior:
-// 'smooth', }); Кнопка должна рендерится только тогда, когда есть какие-то
-// загруженные изобаржения. Если массив изображений пуст, кнопка не рендерится.
+Button.propTypes = {
+  handleBtnClick: PropTypes.func.isRequired,
+  btnVisibility: PropTypes.string.isRequired
+};
+
+function Button({handleBtnClick, btnVisibility}) {
+  return (
+    <button
+      className={styles.Button}
+            type="button"
+            onClick={handleBtnClick}
+            style={{visibility: btnVisibility}}
+          >
+            Load More
+          </button>
+  );
+}
+
+export default Button;
 

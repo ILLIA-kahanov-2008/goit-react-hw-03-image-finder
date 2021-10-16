@@ -1,6 +1,8 @@
-// import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Loader from 'react-js-loader';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
+import Button from '../Button/Button';
 import { imagesAPI } from '../../services/images-api';
 
 import styles from './ImageGallery.module.css';
@@ -18,68 +20,87 @@ class ImageGallery extends Component {
     error: null,
     status: Status.IDLE,
     pageNumber: 1,
-    isHidden: false
+    btnVisibility: 'visible',
   };
-
-  // newQuery = this.props.queryName;
 
   componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.queryName;
     const newQuery = this.props.queryName;
     if (prevQuery !== newQuery) {
-      this.setState({ status: Status.PENDING, pageNumber: 1 });
+      this.setState({
+        status: Status.PENDING,
+        pageNumber: 1,
+        btnVisibility: 'visible',
+      });
       imagesAPI
         .getImages(newQuery, this.state.pageNumber)
         .then(({ data: { hits } }) => {
+          hits.length < 12 && this.setState({ btnVisibility: 'hidden' }); //imagesPerPage
           if (hits.length > 0) {
             this.setState({
               arrayOfImagesByQuery: [...hits],
               status: Status.RESOLVED,
               pageNumber: this.state.pageNumber + 1,
-            })
+            });
           } else {
-            this.setState({              
+            this.setState({
               status: Status.REJECTED,
-            })
-          } 
-        },
-      )
-        // .then(({ data: { hits } }) => hits.length < 12 && this.setState({ isHidden: true })) //imagesPerPage
+            });
+          }
+        })
         .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
-    window.scrollTo({ top: document.documentElement.scrollHeight, behavior:
-'smooth', })
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
   }
 
-  handleBtnClick = () => {
+  LoadMoreBtnClick = () => {
     const newQuery = this.props.queryName;
-    // this.setState({pageNumber: this.state.pageNumber + 1,})
+    this.setState({ status: Status.PENDING });
     imagesAPI
       .getImages(newQuery, this.state.pageNumber)
-      .then(({ data: { hits } }) =>
+      .then(({ data: { hits } }) => {
+        hits.length < 12 && this.setState({ btnVisibility: 'hidden' }); //imagesPerPage
         this.setState(prev => ({
           arrayOfImagesByQuery: [...prev.arrayOfImagesByQuery, ...hits],
           status: Status.RESOLVED,
           pageNumber: this.state.pageNumber + 1,
-        })
-        )        
-    )
-      // .then(({ data: { hits } }) => hits.length < 12 && this.setState({ isHidden: true })) //imagesPerPage
+        }));
+      })
       .catch(error => this.setState({ error, status: Status.REJECTED }));
-    
+  };
+
+  handleImageClick = e => {
+    const { alt, dataset } = e.target;
+    const largeImgURL = dataset.src;
+    console.log('e.target.data-src :>> ', dataset.src);
+    this.props.onImageClick(alt, largeImgURL);
   };
 
   render() {
-    const { arrayOfImagesByQuery, status, isHidden } = this.state;
-    const newQuery=this.props.queryName
+    const { arrayOfImagesByQuery, status, btnVisibility } = this.state;
+    const newQuery = this.props.queryName;
 
     if (status === Status.IDLE) {
       return <h1>Please, Enter your query!!!</h1>;
     }
-    if (status === 'pending') {
-      return <h1>Loading...{newQuery}</h1>;
+    if (status === Status.PENDING) {
+      return (
+        <div style={{ marginTop: 100 }}>
+          <Loader
+            type="spinner-circle"
+            bgColor={'#3f51b5'}
+            title={""}
+            color={'#2a2a2a'}
+            size={100}
+          />
+          <p>Loading...{newQuery}</p>
+        </div>
+      );
     }
-    if (status === 'resolved') {
+    if (status === Status.RESOLVED) {
       return (
         <>
           <ul className={styles.ImageGallery}>
@@ -88,75 +109,36 @@ class ImageGallery extends Component {
                 <ImageGalleryItem
                   imgSrc={webformatURL}
                   tags={tags}
-                  largeImgSrc={largeImageURL}
+                  modalImageURL={largeImageURL}
                   key={id}
+                  // id={id}
+                  handleImageClick={this.handleImageClick}
                 />
               ),
             )}
           </ul>
-          <button
-            type="button"
-            onClick={this.handleBtnClick}
-            // style={isHidden && { visibility: 'hidden' }}
-          >
-            Load More
-          </button>
+          <Button
+            handleBtnClick={this.LoadMoreBtnClick}
+            btnVisibility={btnVisibility}
+          />
         </>
       );
     }
     if (status === Status.REJECTED) {
-      return <h1>{newQuery} hasn't find. Try another query again</h1>;
+      return (
+        <p>
+          <span>{newQuery}</span>
+          hasn't find. Try another query again
+        </p>)
     }
   }
 }
 
+ImageGallery.propTypes = {
+  queryName: PropTypes.string.isRequired,
+  onImageClick: PropTypes.func.isRequired,
+}
+
 export default ImageGallery;
 
-// ImageGallery.propTypes = {
 
-// }
-
-// export default class PokemonInfo extends Component {
-//   state = {
-//     pokemon: null,
-//     error: null,
-//     status: Status.IDLE,
-//   };
-
-//   componentDidUpdate(prevProps, prevState) {
-//     const prevName = prevProps.pokemonName;
-//     const nextName = this.props.pokemonName;
-
-//     if (prevName !== nextName) {
-//       this.setState({ status: Status.PENDING });
-
-//       setTimeout(() => {
-//         pokemonAPI
-//           .fetchPokemon(nextName)
-//           .then(pokemon => this.setState({ pokemon, status: Status.RESOLVED }))
-//           .catch(error => this.setState({ error, status: Status.REJECTED }));
-//       }, 3000);
-//     }
-//   }
-
-//   render() {
-//     const { pokemon, error, status } = this.state;
-//     const { pokemonName } = this.props;
-
-//     if (status === 'idle') {
-//       return <div>Введите имя покемона.</div>;
-//     }
-
-//     if (status === 'pending') {
-//       return <PokemonPendingView pokemonName={pokemonName} />;
-//     }
-
-//     if (status === 'rejected') {
-//       return <PokemonErrorView message={error.message} />;
-//     }
-
-//     if (status === 'resolved') {
-//       return <PokemonDataView pokemon={pokemon} />;
-//     }
-//   }
-// }

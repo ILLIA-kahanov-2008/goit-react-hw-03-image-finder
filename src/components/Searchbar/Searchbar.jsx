@@ -1,44 +1,28 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
-import styles from './Searchbar.module.css'
+import styles from './SearchBar.module.css'
 
 class SearchBar extends Component {
   state = {
     query:'',
-}
+  }
 
-   handleChange = (e) => {
+  handleChange = (e) => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { query} = this.state;
-    console.log('Submit :>> ', query);
-
-     if (query.trim() === '') {
-      alert('Enter query');
+    const { query } = this.state;
+    if (query.trim() === '') {
+      alert('Enter query before submit');
       return;
     }
-
     this.props.onSubmit(query);
     this.setState({ query: '' });
   };
-
-  componentDidMount() {
-
-  }
-
- 
-  componentDidUpdate(prevProps, prevState) {
-
-  }
-
-  componentWillUnmount() {
-
-  }
 
   render() {
     const {query} = this.state
@@ -65,9 +49,9 @@ class SearchBar extends Component {
   }
 }
 
-// SearchBar.propTypes = {
-
-// };
+SearchBar.propTypes = {
+ onSubmit: PropTypes.func.isRequired,
+};
 
 export default SearchBar;
 
