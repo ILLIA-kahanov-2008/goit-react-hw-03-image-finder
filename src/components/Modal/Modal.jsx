@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 class Modal extends Component {
   componentDidMount() {
-    window.addEventListener('keydown', this.handleEscape);
+    window.addEventListener('keydown', this.handleEscape);    
   }
   
   componentWillUnmount() {

@@ -1,23 +1,29 @@
-import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import styles from './ImageGalleryItem.module.css';
 
-// ImageGalleryItem.propTypes = {};
 
-function ImageGalleryItem ({ imgSrc, tags, modalImageURL, id, handleImageClick }) {
+
+function ImageGalleryItem ({ imgSrc, tags, modalImageURL, handleImageClick }) {
+   
   return (
     <li className={styles.ImageGalleryItem}>
       <img
         src={imgSrc}
         alt={tags}
-        data-src={modalImageURL}        
-        onClick={handleImageClick}
+        onClick={() => handleImageClick(tags, modalImageURL)}
         className={styles.ImageGalleryItemIMG}
-        // id={id}
       />
     </li>
   );
 }
+
+
+ImageGalleryItem.propTypes = {
+  imgSrc: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
+  modalImageURL: PropTypes.string.isRequired,
+  handleImageClick: PropTypes.func.isRequired,
+};
 
 export default ImageGalleryItem;

@@ -13,7 +13,7 @@ class App extends Component {
     altModalImageName: '',
     modalImageURL:'',
   }
-  
+
   onFormSubmit = queryName => {    
     this.setState({queryName})
   }
@@ -42,3 +42,23 @@ class App extends Component {
 
 export default App;
 
+
+
+
+
+
+
+
+
+
+  // componentDidMount() {
+  //   console.log("DidMount in APP component");
+  // }
+  
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log("DidUpdate in APP component");
+  // }
+
+  // componentWillUnmount() {
+  //   console.log("WillUnmount in APP component");
+  // }

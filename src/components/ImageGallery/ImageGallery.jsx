@@ -21,24 +21,26 @@ class ImageGallery extends Component {
     status: Status.IDLE,
     pageNumber: 1,
     btnVisibility: 'visible',
+    listHeight: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.queryName;
     const newQuery = this.props.queryName;
+    
     if (prevQuery !== newQuery) {
       this.setState({
         status: Status.PENDING,
-        pageNumber: 1,
         btnVisibility: 'visible',
       });
+      this.resetPageNumber();
       imagesAPI
         .getImages(newQuery, this.state.pageNumber)
         .then(({ data: { hits } }) => {
           hits.length < 12 && this.setState({ btnVisibility: 'hidden' }); //imagesPerPage
           if (hits.length > 0) {
             this.setState({
-              arrayOfImagesByQuery: [...hits],
+              arrayOfImagesByQuery: hits,
               status: Status.RESOLVED,
               pageNumber: this.state.pageNumber + 1,
             });
@@ -50,15 +52,30 @@ class ImageGallery extends Component {
         })
         .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: 'smooth',
-    });
+    if (this.state.arrayOfImagesByQuery.length > 12) {
+      window.scrollTo({
+        top: this.state.listHeight,
+        // top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+    // this.setState({ pageNumber: 1 });
   }
+
+  setListOffsetHeight = () => {
+    this.setState({
+      listHeight: document.getElementById('galleryList').offsetHeight,
+    });
+  };
+
+  resetPageNumber = () => {
+    this.setState({ pageNumber: 1 });
+  };
 
   LoadMoreBtnClick = () => {
     const newQuery = this.props.queryName;
-    this.setState({ status: Status.PENDING });
+    this.setListOffsetHeight();
+    this.setState({ status: Status.PENDING});
     imagesAPI
       .getImages(newQuery, this.state.pageNumber)
       .then(({ data: { hits } }) => {
@@ -72,9 +89,7 @@ class ImageGallery extends Component {
       .catch(error => this.setState({ error, status: Status.REJECTED }));
   };
 
-  handleImageClick = e => {
-    const { alt, dataset } = e.target;
-    const largeImgURL = dataset.src;
+  handleImageClick = (alt, largeImgURL) => {
     this.props.onImageClick(alt, largeImgURL);
   };
 
@@ -91,7 +106,7 @@ class ImageGallery extends Component {
           <Loader
             type="spinner-circle"
             bgColor={'#3f51b5'}
-            title={""}
+            title={''}
             color={'#2a2a2a'}
             size={100}
           />
@@ -102,7 +117,7 @@ class ImageGallery extends Component {
     if (status === Status.RESOLVED) {
       return (
         <>
-          <ul className={styles.ImageGallery}>
+          <ul className={styles.ImageGallery} id="galleryList">
             {arrayOfImagesByQuery.map(
               ({ webformatURL, largeImageURL, tags, id }) => (
                 <ImageGalleryItem
@@ -124,10 +139,20 @@ class ImageGallery extends Component {
     }
     if (status === Status.REJECTED) {
       return (
-        <p style={{color: "#0d2de0"}}>
-          <span style={{fontSize: 16, textDecorationLine: "line-through", color: "red", display: "block"}}>{newQuery}</span>
+        <p style={{ color: '#0d2de0' }}>
+          <span
+            style={{
+              fontSize: 16,
+              textDecorationLine: 'line-through',
+              color: 'red',
+              display: 'block',
+            }}
+          >
+            {newQuery}
+          </span>
           hasn't find. Try another query again
-        </p>)
+        </p>
+      );
     }
   }
 }
@@ -135,8 +160,6 @@ class ImageGallery extends Component {
 ImageGallery.propTypes = {
   queryName: PropTypes.string.isRequired,
   onImageClick: PropTypes.func.isRequired,
-}
+};
 
 export default ImageGallery;
-
-

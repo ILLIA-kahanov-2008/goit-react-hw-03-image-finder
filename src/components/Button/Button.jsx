@@ -7,7 +7,8 @@ Button.propTypes = {
   btnVisibility: PropTypes.string.isRequired
 };
 
-function Button({handleBtnClick, btnVisibility}) {
+function Button({ handleBtnClick, btnVisibility }) {
+  
   return (
     <button
       className={styles.Button}
