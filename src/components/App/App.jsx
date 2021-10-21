@@ -13,35 +13,21 @@ class App extends Component {
     altModalImageName: '',
     modalImageURL: '',
     pageNumber: 1,
-    listHeight: '',
-  }
-
-  // componentDidMount() {
-  //   console.log("DidMount in APP component");
-  // }
-  
-  // componentDidUpdate(prevProps, prevState) {
-  //   console.log("DidUpdate in APP component");
-  // }
-
-  // componentWillUnmount() {
-  //   console.log("WillUnmount in APP component");
-  // }
+    listHeight: null,
+  };
 
   onFormSubmit = (queryName, pageNumber) => {
     // console.log("FORM submit");
     this.setState({
       queryName,
       pageNumber,
-      listHeight: '',
-    })
-  }
+      listHeight: null,
+    });
+  };
 
-  setPageNumber = (pageNumber) => {
-    // console.log("before setState FUNC setPageNumber", this.state.pageNumber);
-    this.setState({ pageNumber });
-    // console.log("after setState FUNC setPageNumber", this.state.pageNumber);
-  }
+  setPageNumber = pageNumber => {    
+    this.setState({ pageNumber });  
+  };
 
   setListOffsetHeight = () => {
     this.setState({
@@ -50,18 +36,17 @@ class App extends Component {
   };
 
   onImageClick = (altModalImageName, modalImageURL) => {
-    this.setState({altModalImageName, modalImageURL})
+    this.setState({ altModalImageName, modalImageURL });
     this.toggleModal();
-  }
+  };
 
   toggleModal = () => {
     this.setState(({ showModal }) => ({ showModal: !showModal }));
-    
-  }
+  };
 
   resetModalOptionsInState = () => {
-     this.setState({altModalImageName:'', modalImageURL:''})
-  }
+    this.setState({ altModalImageName: '', modalImageURL: '' });
+  };
 
   render() {
     const {
@@ -70,48 +55,42 @@ class App extends Component {
       listHeight,
       showModal,
       altModalImageName,
-      modalImageURL} = this.state
-  return (
-    <div className="App">
-      <SearchBar onSubmit={this.onFormSubmit}/>
-      <ImageGallery
-        queryName={queryName}
-        onImageClick={this.onImageClick}
-        listHeight={listHeight}
-        setListOffsetHeight={this.setListOffsetHeight}
-        setPageNumber={this.setPageNumber}        
-        page={ pageNumber}/>
-      {showModal &&(
-        <Modal
-          onClose={this.toggleModal}
-          altName={altModalImageName}
-          imageURL={modalImageURL}
-          resetAppOptions={this.resetModalOptionsInState}
-        />)
-      }
-    </div>
-  );}
+      modalImageURL,
+    } = this.state;
+    return (
+      <div className="App">
+        <SearchBar onSubmit={this.onFormSubmit} />
+        <ImageGallery
+          queryName={queryName}
+          onImageClick={this.onImageClick}
+          listHeight={listHeight}
+          setListOffsetHeight={this.setListOffsetHeight}
+          setPageNumber={this.setPageNumber}
+          page={pageNumber}
+        />
+        {showModal && (
+          <Modal
+            onClose={this.toggleModal}
+            altName={altModalImageName}
+            imageURL={modalImageURL}
+            resetAppOptions={this.resetModalOptionsInState}
+          />
+        )}
+      </div>
+    );
+  }
 }
 
 export default App;
 
+// componentDidMount() {
+//   console.log("DidMount in APP component");
+// }
 
+// componentDidUpdate(prevProps, prevState) {
+//   console.log("DidUpdate in APP component");
+// }
 
-
-
-
-
-
-
-
-  // componentDidMount() {
-  //   console.log("DidMount in APP component");
-  // }
-  
-  // componentDidUpdate(prevProps, prevState) {
-  //   console.log("DidUpdate in APP component");
-  // }
-
-  // componentWillUnmount() {
-  //   console.log("WillUnmount in APP component");
-  // }
+// componentWillUnmount() {
+//   console.log("WillUnmount in APP component");
+// }

@@ -28,21 +28,20 @@ class ImageGallery extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     // this.props.setListOffsetHeight();
-    
+
     // console.log("at starts DidUpdate in ImageGallery component state.pageNumber:",
     //   this.props.page);
-    
+
     const prevQuery = prevProps.queryName;
     const newQuery = this.props.queryName;
     let pageNumber = this.props.page;
     let listHeight = this.props.listHeight;
-    
+
     // console.log("before{if}#1 DidUpdate in ImageGallery component:",
     //   pageNumber, "prevQuery:", prevQuery, "newQuery", newQuery);
-    
+
     if (prevQuery !== newQuery) {
-      this.setState({        status: Status.PENDING,        btnVisibility: 'visible',   
-      });
+      this.setState({ status: Status.PENDING, btnVisibility: 'visible' });
       // console.log("in {if}#1 before FETCH DidUpdate in ImageGallery component:",
       // pageNumber);
       imagesAPI
@@ -55,10 +54,10 @@ class ImageGallery extends Component {
               arrayOfImagesByQuery: hits,
               status: Status.RESOLVED,
             });
-            pageNumber+=1;
+            pageNumber += 1;
             this.props.setPageNumber(pageNumber);
-      //       console.log("in {if}#1 after FETCH DidUpdate in ImageGallery component:",
-      // pageNumber);
+            //       console.log("in {if}#1 after FETCH DidUpdate in ImageGallery component:",
+            // pageNumber);
           } else {
             this.setState({
               status: Status.REJECTED,
@@ -93,8 +92,8 @@ class ImageGallery extends Component {
           arrayOfImagesByQuery: [...prev.arrayOfImagesByQuery, ...hits],
           status: Status.RESOLVED,
         }));
-        pageNumber+=1;
-            this.props.setPageNumber(pageNumber)
+        pageNumber += 1;
+        this.props.setPageNumber(pageNumber);
         // console.log("after FETCH in LoadMoreBtnClick", pageNumber);
       })
       .catch(error => this.setState({ error, status: Status.REJECTED }));
@@ -175,10 +174,10 @@ class ImageGallery extends Component {
 ImageGallery.propTypes = {
   queryName: PropTypes.string.isRequired,
   onImageClick: PropTypes.func.isRequired,
-  listHeight: PropTypes.string,
+  listHeight: PropTypes.number,
   setListOffsetHeight: PropTypes.func.isRequired,
-        setPageNumber: PropTypes.func.isRequired,
-        page: PropTypes.number.isRequired,
+  setPageNumber: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
 };
 
 export default ImageGallery;
