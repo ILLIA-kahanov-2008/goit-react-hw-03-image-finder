@@ -14,13 +14,14 @@ class SearchBar extends Component {
   };
 
   handleSubmit = (e) => {
+    const pageNumber = 1;
     e.preventDefault();
     const { query } = this.state;
     if (query.trim() === '') {
       alert('Enter query before submit');
       return;
     }
-    this.props.onSubmit(query);
+    this.props.onSubmit(query, pageNumber);
     this.setState({ query: '' });
   };
 

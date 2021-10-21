@@ -15,12 +15,14 @@ class Modal extends Component {
   handleEscape = e => {
     if (e.code === 'Escape') {
       this.props.onClose();
+      this.props.resetAppOptions();
     }
   };
 
   handleBackdropClick = e => {
    if (e.currentTarget === e.target) {
-      this.props.onClose();
+     this.props.onClose();
+     this.props.resetAppOptions();
     }
   }
 
@@ -41,6 +43,7 @@ Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
   altName: PropTypes.string.isRequired,
   imageURL: PropTypes.string.isRequired,
+  resetAppOptions:PropTypes.func.isRequired,
 };
 
 export default Modal;

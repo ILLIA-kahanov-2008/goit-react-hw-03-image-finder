@@ -11,12 +11,43 @@ class App extends Component {
     queryName: '',
     showModal: false,
     altModalImageName: '',
-    modalImageURL:'',
+    modalImageURL: '',
+    pageNumber: 1,
+    listHeight: '',
   }
 
-  onFormSubmit = queryName => {    
-    this.setState({queryName})
+  // componentDidMount() {
+  //   console.log("DidMount in APP component");
+  // }
+  
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log("DidUpdate in APP component");
+  // }
+
+  // componentWillUnmount() {
+  //   console.log("WillUnmount in APP component");
+  // }
+
+  onFormSubmit = (queryName, pageNumber) => {
+    // console.log("FORM submit");
+    this.setState({
+      queryName,
+      pageNumber,
+      listHeight: '',
+    })
   }
+
+  setPageNumber = (pageNumber) => {
+    // console.log("before setState FUNC setPageNumber", this.state.pageNumber);
+    this.setState({ pageNumber });
+    // console.log("after setState FUNC setPageNumber", this.state.pageNumber);
+  }
+
+  setListOffsetHeight = () => {
+    this.setState({
+      listHeight: document.getElementById('galleryList').offsetHeight,
+    });
+  };
 
   onImageClick = (altModalImageName, modalImageURL) => {
     this.setState({altModalImageName, modalImageURL})
@@ -24,17 +55,39 @@ class App extends Component {
   }
 
   toggleModal = () => {
-    this.setState(({showModal})=>({showModal:!showModal}))
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
+    
+  }
+
+  resetModalOptionsInState = () => {
+     this.setState({altModalImageName:'', modalImageURL:''})
   }
 
   render() {
-    const {queryName, showModal, altModalImageName, modalImageURL} =this.state
+    const {
+      queryName,
+      pageNumber,
+      listHeight,
+      showModal,
+      altModalImageName,
+      modalImageURL} = this.state
   return (
     <div className="App">
       <SearchBar onSubmit={this.onFormSubmit}/>
-      <ImageGallery queryName={queryName} onImageClick={this.onImageClick} />
+      <ImageGallery
+        queryName={queryName}
+        onImageClick={this.onImageClick}
+        listHeight={listHeight}
+        setListOffsetHeight={this.setListOffsetHeight}
+        setPageNumber={this.setPageNumber}        
+        page={ pageNumber}/>
       {showModal &&(
-        <Modal onClose={this.toggleModal} altName={altModalImageName} imageURL={modalImageURL} />)
+        <Modal
+          onClose={this.toggleModal}
+          altName={altModalImageName}
+          imageURL={modalImageURL}
+          resetAppOptions={this.resetModalOptionsInState}
+        />)
       }
     </div>
   );}
