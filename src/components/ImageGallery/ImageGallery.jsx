@@ -87,25 +87,15 @@ class ImageGallery extends Component {
   render() {
     const { arrayOfImagesByQuery, status, btnVisibility } = this.state;
     const newQuery = this.props.queryName;
+    const listHeight = this.props.listHeight;
 
     if (status === Status.IDLE) {
       return <h1>Please, Enter your query!!!</h1>;
-    }     
+    }
+    
     if (status === Status.RESOLVED || status === Status.PENDING) {  
       return (        
-        <>
-          {status === Status.PENDING && (           
-        <div style={{ marginTop: 100 }}>
-          <Loader
-            type="spinner-circle"
-            bgColor={'#3f51b5'}
-            title={''}
-            color={'#2a2a2a'}
-            size={100}
-          />
-          <p>Loading...{newQuery}</p>
-          </div>
-        )}
+        <>        
           <ul className={styles.ImageGallery} id="galleryList">
             {arrayOfImagesByQuery.map(
               ({ webformatURL, largeImageURL, tags, id }) => (
@@ -119,10 +109,22 @@ class ImageGallery extends Component {
               ),
             )}
           </ul>
-          <Button
-            handleBtnClick={this.LoadMoreBtnClick}
-            btnVisibility={btnVisibility}
-          />
+          {status === Status.PENDING ? (
+            <div style={{ marginTop: listHeight===0 && 100 }}>
+              <Loader
+                type={listHeight!==0?"box-up":"spinner-circle"}
+                bgColor={'#3f51b5'}
+                title={''}
+                color={'#2a2a2a'}
+                size={100}
+              />
+              <p>Loading...{newQuery}</p>
+            </div>
+          ) :
+            (<Button
+              handleBtnClick={this.LoadMoreBtnClick}
+              btnVisibility={btnVisibility}
+            />)}
         </>
       );
     }
