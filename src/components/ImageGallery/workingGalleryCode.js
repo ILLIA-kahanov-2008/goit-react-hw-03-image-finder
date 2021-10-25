@@ -13,6 +13,7 @@ const Status = {
   RESOLVED: 'resolved',
   REJECTED: 'rejected',
 };
+
 class ImageGallery extends Component {
   state = {
     arrayOfImagesByQuery: [],
@@ -20,18 +21,18 @@ class ImageGallery extends Component {
     status: Status.IDLE,
     btnVisibility: 'visible',
   };
-  
- componentDidUpdate(prevProps, prevState) {
+
+  // componentDidMount() {
+  //   console.log("DidMount in ImageGallery component");
+  // }
+
+  componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.queryName;
     const newQuery = this.props.queryName;
-   let pageNumber = this.props.page;      
-   let listHeight = this.props.listHeight;
+    let pageNumber = this.props.page;
 
     if (prevQuery !== newQuery) {
-      this.setState({
-        status: Status.PENDING,
-        btnVisibility: 'visible',   
-      });
+      this.setState({ status: Status.PENDING, btnVisibility: 'visible' });
       imagesAPI
         .getImages(newQuery, pageNumber)
         .then(({ data: { hits } }) => {
@@ -42,7 +43,7 @@ class ImageGallery extends Component {
               status: Status.RESOLVED,
             });
             pageNumber += 1;
-            this.props.setPageNumber(pageNumber);       
+            this.props.setPageNumber(pageNumber);
           } else {
             this.setState({
               status: Status.REJECTED,
@@ -51,20 +52,22 @@ class ImageGallery extends Component {
         })
         .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
-   if (
-     this.state.arrayOfImagesByQuery !== prevState.arrayOfImagesByQuery
-   ) {
+
+    if (
+      this.state.arrayOfImagesByQuery !== prevState.arrayOfImagesByQuery &&
+      this.props.page !== 1
+    ) {
       window.scrollTo({
-        top: listHeight,
+        top: document.documentElement.scrollHeight,
         behavior: 'smooth',
       });
     }
   }
 
-  LoadMoreBtnClick = () => {    
+  LoadMoreBtnClick = () => {
     const newQuery = this.props.queryName;
     let pageNumber = this.props.page;
-    this.props.setListOffsetHeight();    
+    // this.props.setListOffsetHeight();
     this.setState({ status: Status.PENDING });
     imagesAPI
       .getImages(newQuery, pageNumber)
@@ -77,7 +80,7 @@ class ImageGallery extends Component {
         pageNumber += 1;
         this.props.setPageNumber(pageNumber);
       })
-      .catch(error => this.setState({ error, status: Status.REJECTED }));    
+      .catch(error => this.setState({ error, status: Status.REJECTED }));
   };
 
   handleImageClick = (alt, largeImgURL) => {
@@ -90,22 +93,22 @@ class ImageGallery extends Component {
 
     if (status === Status.IDLE) {
       return <h1>Please, Enter your query!!!</h1>;
-    }     
-    if (status === Status.RESOLVED || status === Status.PENDING) {  
-      return (        
+    }
+    if (status === Status.RESOLVED || status === Status.PENDING) {
+      return (
         <>
-          {status === Status.PENDING && (           
-        <div style={{ marginTop: 100 }}>
-          <Loader
-            type="spinner-circle"
-            bgColor={'#3f51b5'}
-            title={''}
-            color={'#2a2a2a'}
-            size={100}
-          />
-          <p>Loading...{newQuery}</p>
-          </div>
-        )}
+          {status === Status.PENDING && (
+            <div style={{ marginTop: 100 }}>
+              <Loader
+                type="spinner-circle"
+                bgColor={'#3f51b5'}
+                title={''}
+                color={'#2a2a2a'}
+                size={100}
+              />
+              <p>Loading...{newQuery}</p>
+            </div>
+          )}
           <ul className={styles.ImageGallery} id="galleryList">
             {arrayOfImagesByQuery.map(
               ({ webformatURL, largeImageURL, tags, id }) => (
@@ -149,11 +152,10 @@ class ImageGallery extends Component {
 ImageGallery.propTypes = {
   queryName: PropTypes.string.isRequired,
   onImageClick: PropTypes.func.isRequired,
-  listHeight: PropTypes.number,
-  setListOffsetHeight: PropTypes.func.isRequired,
+  // listHeight: PropTypes.number,
+  // setListOffsetHeight: PropTypes.func.isRequired,
   setPageNumber: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
 };
 
 export default ImageGallery;
-

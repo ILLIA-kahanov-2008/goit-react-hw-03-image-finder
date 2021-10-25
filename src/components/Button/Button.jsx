@@ -8,7 +8,6 @@ Button.propTypes = {
 };
 
 function Button({ handleBtnClick, btnVisibility }) {
-  // console.log("LoadMoreBtn rendered");
   return (
     <button
       className={styles.Button}

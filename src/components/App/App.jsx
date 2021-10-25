@@ -13,15 +13,14 @@ class App extends Component {
     altModalImageName: '',
     modalImageURL: '',
     pageNumber: 1,
-    listHeight: null,
+    galleryListHeight: 0,
   };
 
-  onFormSubmit = (queryName, pageNumber) => {
-    // console.log("FORM submit");
+ onFormSubmit = (queryName, pageNumber) => {
     this.setState({
       queryName,
       pageNumber,
-      listHeight: null,
+      galleryListHeight: 0,
     });
   };
 
@@ -31,7 +30,7 @@ class App extends Component {
 
   setListOffsetHeight = () => {
     this.setState({
-      listHeight: document.getElementById('galleryList').offsetHeight,
+      galleryListHeight: document.getElementById('galleryList').offsetHeight,
     });
   };
 
@@ -52,7 +51,7 @@ class App extends Component {
     const {
       queryName,
       pageNumber,
-      listHeight,
+      galleryListHeight,
       showModal,
       altModalImageName,
       modalImageURL,
@@ -63,7 +62,7 @@ class App extends Component {
         <ImageGallery
           queryName={queryName}
           onImageClick={this.onImageClick}
-          listHeight={listHeight}
+          listHeight={galleryListHeight}
           setListOffsetHeight={this.setListOffsetHeight}
           setPageNumber={this.setPageNumber}
           page={pageNumber}

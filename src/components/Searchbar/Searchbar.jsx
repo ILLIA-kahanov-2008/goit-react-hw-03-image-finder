@@ -14,7 +14,7 @@ class SearchBar extends Component {
   };
 
   handleSubmit = (e) => {
-    const pageNumber = 1;
+    const pageNumber = 1;    
     e.preventDefault();
     const { query } = this.state;
     if (query.trim() === '') {
